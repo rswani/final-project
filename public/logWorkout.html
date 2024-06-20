@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log a Workout</title>
+    <link rel="stylesheet" href="css/themes/fft-theme.min.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="logWorkout">
+    <div data-role="header">
+        <h1>Final Fitness Tracker</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="index.html" rel="external">Home</a></li>
+                <li><a href="logWorkout.html" class="ui-btn-active" rel="external">Log Workout</a></li>
+                <li><a href="viewProgress.html" rel="external">View Progress</a></li>
+                <li><a href="settings.html" rel="external">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div data-role="content">
+        <h2>Log a Workout</h2>
+        <form id="logWorkoutForm">
+            <label for="exercise">Exercise:</label>
+            <input type="text" name="exercise" id="exercise" required>
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date" required>
+            <label for="duration">Duration (minutes):</label>
+            <input type="number" name="duration" id="duration" min="1" required>
+            <label for="calories">Calories Burned:</label>
+            <input type="number" name="calories" id="calories" min="0" required>
+            <button type="submit" class="ui-btn">Log Workout</button>
+        </form>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('#logWorkoutForm').submit(function(e) {
+            e.preventDefault();
+            
+            const exercise = $('#exercise').val();
+            const date = $('#date').val();
+            const duration = parseInt($('#duration').val());
+            const calories = parseInt($('#calories').val());
+
+            const workoutData = {
+                exercise,
+                date,
+                duration,
+                calories
+            };
+
+            $.ajax({
+                url: '/workouts',
+                type: 'POST',
+                data: workoutData,
+                success: function() {
+                    alert('Workout logged successfully.');
+                },
+                error: function(err) {
+                    console.error('Error logging workout:', err);
+                    alert('Failed to log workout. Please try again.');
+                }
+            });
+        });
+    });
+    </script>
+</div>
+</body>
+</html>

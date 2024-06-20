@@ -1,0 +1,10 @@
+{
+  "profile": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "goals": {
+    "weeklyGoal": "5"
+  },
+  "reminderTime": "08:00"
+}

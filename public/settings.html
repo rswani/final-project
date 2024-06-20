@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="css/themes/fft-theme.min.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="settings">
+    <div data-role="header">
+        <h1>Final Fitness Tracker</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="index.html" rel="external">Home</a></li>
+                <li><a href="logWorkout.html" rel="external">Log Workout</a></li>
+                <li><a href="viewProgress.html" rel="external">View Progress</a></li>
+                <li><a href="settings.html" class="ui-btn-active" rel="external">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div data-role="content">
+        <h2>Settings</h2>
+        <form id="settingsForm">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email">
+            <label for="weeklyGoal">Weekly Goal (hours):</label>
+            <input type="number" name="weeklyGoal" id="weeklyGoal">
+            <label for="reminderTime">Reminder Time:</label>
+            <input type="time" name="reminderTime" id="reminderTime">
+            <button type="submit" class="ui-btn">Save Settings</button>
+        </form>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/settings',
+            type: 'GET',
+            success: function(data) {
+                $('#name').val(data.profile.name);
+                $('#email').val(data.profile.email);
+                $('#weeklyGoal').val(data.goals.weeklyGoal);
+                $('#reminderTime').val(data.reminderTime);
+            },
+            error: function(err) {
+                console.error('Error fetching settings:', err);
+            }
+        });
+
+        $('#settingsForm').submit(function(e) {
+            e.preventDefault();
+            const settingsData = {
+                profile: {
+                    name: $('#name').val(),
+                    email: $('#email').val()
+                },
+                goals: {
+                    weeklyGoal: $('#weeklyGoal').val()
+                },
+                reminderTime: $('#reminderTime').val()
+            };
+
+            $.ajax({
+                url: '/settings',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(settingsData),
+                success: function() {
+                    alert('Settings saved successfully.');
+                },
+                error: function(err) {
+                    console.error('Error saving settings:', err);
+                    alert('Failed to save settings. Please try again.');
+                }
+            });
+        });
+    });
+    </script>
+</div>
+</body>
+</html>
